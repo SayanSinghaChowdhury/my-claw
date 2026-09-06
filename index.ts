@@ -5,7 +5,7 @@ import { Command } from "commander";
 const program = new Command();
 
 program
-	.name("My-Claw")
+	.name("my-Claw")
 	.description("✋ Hi i am Your helper your Claw yor personal Ai ")
 	.version("0.0.1");
 
@@ -15,7 +15,7 @@ program
 		"I'm your local AI assistant that lives on your machine & telegram......",
 	)
 	.action(async () => {
-		console.log("(●'◡'●) runing....");
+		console.log("(●'◡'●) running....");
 	});
 
 await program.parseAsync(process.argv);
