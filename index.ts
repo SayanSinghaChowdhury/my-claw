@@ -1,6 +1,7 @@
 #!/usr/bin/env bun
 
 import { Command } from "commander";
+import { exsicuteRun } from "./exsicuteRun";
 
 const program = new Command();
 
@@ -15,7 +16,7 @@ program
 		"I'm your local AI assistant that lives on your machine & telegram......",
 	)
 	.action(async () => {
-		console.log("(●'◡'●) running....");
+		await exsicuteRun();
 	});
 
 await program.parseAsync(process.argv);
