@@ -1,6 +1,7 @@
 import { isCancel, select } from "@clack/prompts";
 import chalk from "chalk";
 import figlet from "figlet";
+import { runCliMode } from "./modes/runCliMode";
 
 const font = "ANSI Shadow";
 
@@ -45,17 +46,29 @@ export async function exsicuteRun() {
 		message: "Pick your mode — how do you want to run my-claw?",
 
 		options: [
-			{ value: "cli", label: "CLI 🐸" },
+			{ value: "cli", label: "CLI 🐸 " },
 			{ value: "telegram", label: "TELEGRAM 🫧" },
+			{ value: "exit", label: "EXIT 🔚" },
 		],
 	});
+	// for exit form mode
 
 	if (isCancel(mode)) {
-		process.exit(0);
+		console.log(chalk.dim(`successfully exited form mode.`));
+		return;
 	} else {
-		if (mode === "cli") {
-			console.log(chalk.dim(`starting CLI mode.......`));
-		} else {
+		if (mode === "exit") {
+			console.log(chalk.dim(`successfully exited form mode.`));
+		}
+	}
+	// select Mode
+
+	if (mode === "cli") {
+		console.log(chalk.dim(`starting CLI mode.......`));
+
+		await runCliMode();
+	} else {
+		if (mode === "telegram") {
 			console.log(chalk.dim(`starting Teligram mode.......`));
 		}
 	}
