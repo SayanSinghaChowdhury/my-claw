@@ -1,7 +1,7 @@
 import { isCancel, select } from "@clack/prompts";
 import chalk from "chalk";
 import figlet from "figlet";
-import { runCliMode } from "./modes/runCliMode";
+import { runCliMode } from "./modes/agent/runCliMode";
 
 const font = "ANSI Shadow";
 

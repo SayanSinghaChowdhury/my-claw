@@ -1,6 +1,6 @@
 import { isCancel, text } from "@clack/prompts";
 import chalk from "chalk";
-import { actionTrackerMethod } from "./actionTrackerMethod";
+import { ActionTrackerMethod } from "./actionTrackerMethod";
 import { defaultAgentConfig } from "./type";
 
 const runAgentMode = async () => {
@@ -12,8 +12,10 @@ const runAgentMode = async () => {
 	});
 
 	if (isCancel(firstStep || firstStep.trim)) return;
-
+	// AI CONFIGRATION
 	const config = defaultAgentConfig();
+	// AI TRACK TASK DATA
+	const actionTracker = new ActionTrackerMethod();
 
-	const actionTracker = actionTrackerMethod();
+	const exsicutor = new ToolKitExsicutr(config, actionTracker);
 };
