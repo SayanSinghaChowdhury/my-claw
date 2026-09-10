@@ -37,7 +37,7 @@ export interface AgentConfig {
 	};
 }
 
-export const defaultAgentConfig = (): AgentConfig => ({
+export const DefaultAgentConfig = (): AgentConfig => ({
 	codebasePath: process.cwd(),
 	maxFileSizeToRead: 1024 * 1024,
 	excludePatterns: [
