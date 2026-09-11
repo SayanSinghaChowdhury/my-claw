@@ -1,5 +1,6 @@
 import { isCancel, select } from "@clack/prompts";
 import chalk from "chalk";
+import { AgentHead } from "./orchestrator";
 
 export const runCliMode = async () => {
 	while (true) {
@@ -25,7 +26,7 @@ export const runCliMode = async () => {
 		});
 
 		if (isCancel(pickMode)) {
-			console.log(chalk.dim(`successfully exited form mode.`));
+			await AgentHead();
 			return;
 		} else {
 			if (pickMode === "forward") {
