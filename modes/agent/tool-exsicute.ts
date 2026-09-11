@@ -1,119 +1,45 @@
+import { spawnSync } from "node:child_process";
+import fs from "node:fs";
+import { homedir } from "node:os";
 import path from "node:path";
 import type { ActionTrackerMethod } from "./actionTrackerMethod";
 import type { ActionLog, AgentConfig } from "./type";
 
-import { spawnSync } from "node:child_process";
-import fs from "node:fs";
-import { homedir } from "node:os";
-
-// File EXTENSION IN KOWER CASE
 const TEXT_EXT = new Set([
-	".js",
-	".jsx",
 	".ts",
 	".tsx",
+	".js",
+	".jsx",
 	".mjs",
 	".cjs",
-
-	".html",
-	".htm",
-	".css",
-	".scss",
-	".sass",
-	".less",
-
 	".json",
-	".jsonc",
-	".xml",
-	".yaml",
-	".yml",
-	".toml",
-
-	".c",
-	".h",
-	".cpp",
-	".cc",
-	".cxx",
-	".hpp",
-
-	".java",
-	".kt",
-	".kts",
-	".scala",
-
-	".py",
-	".pyw",
-	".rb",
-	".php",
-	".swift",
-	".go",
-	".rs",
-	".dart",
-
-	".sh",
-	".bash",
-	".zsh",
-	".fish",
-	".ps1",
-	".bat",
-	".cmd",
-
-	".sql",
-	".graphql",
-	".gql",
-
-	".vue",
-	".svelte",
-	".astro",
-
-	".lua",
-	".r",
-	".pl",
-	".pm",
-
-	".ex",
-	".exs",
-	".erl",
-	".hrl",
-
-	".fs",
-	".fsx",
-	".fsproj",
-	".vb",
-	".cs",
-	".csx",
-
-	".sol",
-	".move",
-
-	".asm",
-	".s",
-
 	".md",
 	".mdx",
+	".css",
+	".html",
+	".yml",
+	".yaml",
+	".toml",
 	".txt",
 ]);
 
-const isTextFileMaybe = (filepath: string): boolean => {
-	const ext = path.extname(filepath).toLowerCase();
+function isProbablyTextFile(filePath: string): boolean {
+	const ext = path.extname(filePath).toLowerCase();
+	return TEXT_EXT.has(ext) || ext === "";
+}
 
-	return TEXT_EXT.has(ext) || ext === ``;
-};
-
-export class ToolKitExsicutor {
+export class ToolExecutor {
 	private overlay = new Map<string, string>();
 	private deleted = new Set<string>();
 	private readonly norm = (rel: string) =>
-		path.posix.normalize(
-			rel.split(path.sep).join("/").replace(/^\.\//, ""),
-		);
+		path.posix
+			.normalize(rel.split(path.sep).join("/"))
+			.replace(/^\.\//, "");
 
 	constructor(
 		private readonly tracker: ActionTrackerMethod,
 		private readonly config: AgentConfig,
 	) {}
-
-	// path Sequrity
 
 	private resolveSafe(rel: string): string {
 		const abs = path.resolve(this.config.codebasePath, rel);
@@ -124,7 +50,7 @@ export class ToolKitExsicutor {
 		}
 		return abs;
 	}
-	// excluded
+
 	private excluded(relPath: string): boolean {
 		const norm = this.norm(relPath);
 		const segments = norm.split("/");
@@ -146,25 +72,18 @@ export class ToolKitExsicutor {
 
 	private assertNotExcluded(rel: string, op: string): void {
 		if (this.excluded(rel)) {
-			throw new Error(`${op}: path is Excluded by Plolicy${rel}`);
+			throw new Error(`${op}: path is excluded by policy: ${rel}`);
 		}
 	}
 
-	getEffecttivetext(rel: string): string | undefined {
+	getEffectiveText(rel: string): string | undefined {
 		const key = this.norm(rel);
-
 		if (this.deleted.has(key)) return undefined;
-
 		if (this.overlay.has(key)) return this.overlay.get(key);
-
 		const abs = this.resolveSafe(rel);
-
 		if (!fs.existsSync(abs) || !fs.statSync(abs).isFile()) return undefined;
-
-		return fs.readFileSync(abs, `utf8`);
+		return fs.readFileSync(abs, "utf8");
 	}
-
-	// AI ACTION SYSTEM
 
 	readFile(rel: string): string {
 		this.assertNotExcluded(rel, "read_file");
@@ -210,7 +129,7 @@ export class ToolKitExsicutor {
 		if (!this.config.tools.allowFileModification)
 			throw new Error("File modification disabled");
 		this.assertNotExcluded(rel, "modify_file");
-		const before = this.getEffecttivetext(rel);
+		const before = this.getEffectiveText(rel);
 		if (before === undefined)
 			throw new Error(`modify_file: file not found: ${rel}`);
 		const key = this.norm(rel);
@@ -228,8 +147,7 @@ export class ToolKitExsicutor {
 		if (!this.config.tools.allowFileModification)
 			throw new Error("File deletion disabled");
 		this.assertNotExcluded(rel, "delete_file");
-		const before = this.getEffecttivetext(rel);
-
+		const before = this.getEffectiveText(rel);
 		if (before === undefined)
 			throw new Error(`delete_file: file not found: ${rel}`);
 		const key = this.norm(rel);
@@ -265,7 +183,20 @@ export class ToolKitExsicutor {
 			throw new Error(`list_files: not found: ${rel}`);
 
 		const lines: string[] = [];
-		const walk = (dir: string, prefix: string) => {};
+		const walk = (dir: string, prefix: string) => {
+			const entries = fs.readdirSync(dir, { withFileTypes: true });
+			for (const ent of entries) {
+				const full = path.join(dir, ent.name);
+				const relP = path.relative(this.config.codebasePath, full);
+				if (this.excluded(relP)) continue;
+				if (ent.isDirectory()) {
+					lines.push(`${prefix}${ent.name}/`);
+					if (recursive) walk(full, `${prefix}${ent.name}/`);
+				} else {
+					lines.push(`${prefix}${ent.name}`);
+				}
+			}
+		};
 
 		if (fs.statSync(abs).isDirectory()) walk(abs, "");
 		else lines.push(path.relative(this.config.codebasePath, abs));
@@ -385,7 +316,6 @@ export class ToolKitExsicutor {
 		});
 		return `Shell queued: ${command}`;
 	}
-
 	skillRoots(): string[] {
 		const extra =
 			process.env.SKILLS_DIRS?.split(/[;]/)

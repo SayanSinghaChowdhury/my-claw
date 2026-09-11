@@ -1,7 +1,7 @@
 import { isCancel, text } from "@clack/prompts";
 import chalk from "chalk";
 import { ActionTrackerMethod } from "./actionTrackerMethod";
-import { ToolKitExsicutor } from "./tool-exsicute";
+import { ToolExecutor } from "./tool-exsicute";
 import { DefaultAgentConfig } from "./type";
 
 const {} = async () => {
@@ -20,5 +20,5 @@ const {} = async () => {
 
 	// const exsicutor = new ToolKitExsicutor(config, actionTracker);
 
-	const executor = new ToolKitExsicutor(actionTracker, config);
+	const executor = new ToolExecutor(actionTracker, config);
 };

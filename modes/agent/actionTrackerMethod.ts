@@ -5,8 +5,8 @@ export class ActionTrackerMethod {
 
 	log(
 		entry: Omit<ActionLog, "id" | "timestamp"> & {
-			id: string;
-			timestamp: Date;
+			id?: string;
+			timestamp?: Date;
 		},
 	): ActionLog {
 		const action: ActionLog = {
@@ -41,6 +41,6 @@ export class ActionTrackerMethod {
 
 		a.status = status;
 
-		if (userApproved === undefined) a.userApproved = userApproved;
+		if (userApproved !== undefined) a.userApproved = userApproved;
 	}
 }
