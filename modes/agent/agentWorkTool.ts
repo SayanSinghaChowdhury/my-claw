@@ -2,7 +2,7 @@ import { tool } from "ai";
 import { z } from "zod";
 import type { ToolExecutor } from "./tool-exsicute";
 
-const CreateAgentTool = (executor: ToolExecutor) => {
+export const CreateAgentTool = (executor: ToolExecutor) => {
 	// toll Exsicute Point all toll inisalize Spell Mistake Not mind
 	return {
 		read_File: tool({

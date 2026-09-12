@@ -2,8 +2,8 @@ import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import { homedir } from "node:os";
 import path from "node:path";
+import type { ActionLog, AgentConfig } from "../../lib/type";
 import type { ActionTrackerMethod } from "./actionTrackerMethod";
-import type { ActionLog, AgentConfig } from "./type";
 
 const TEXT_EXT = new Set([
 	".ts",

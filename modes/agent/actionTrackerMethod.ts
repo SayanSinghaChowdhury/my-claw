@@ -1,4 +1,8 @@
-import { isMutationType, type ActionLog, type ActionStatus } from "./type";
+import {
+	isMutationType,
+	type ActionLog,
+	type ActionStatus,
+} from "../../lib/type";
 
 export class ActionTrackerMethod {
 	private action: ActionLog[] = [];

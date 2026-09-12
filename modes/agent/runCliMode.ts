@@ -26,7 +26,6 @@ export const runCliMode = async () => {
 		});
 
 		if (isCancel(pickMode)) {
-			await AgentHead();
 			return;
 		} else {
 			if (pickMode === "forward") {
@@ -36,6 +35,7 @@ export const runCliMode = async () => {
 
 		if (pickMode === "agent") {
 			console.log("agent......");
+			await AgentHead();
 		}
 		if (pickMode === "plan") {
 			console.log("plan......");
