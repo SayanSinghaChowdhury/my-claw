@@ -7,4 +7,7 @@ export const EnvApiSchema = z.object({
 
 export type EnvApiType = z.infer<typeof EnvApiSchema>;
 
-export const envApi: EnvApiType = EnvApiSchema.parse(process.env);
+export const envApi: EnvApiType = EnvApiSchema.parse({
+	OPENROUTER_API_KEY: Bun.env.OPENROUTER_API_KEY,
+	OPENROUTER_DEFAULT_MODEL: Bun.env.OPENROUTER_DEFAULT_MODEL,
+});

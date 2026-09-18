@@ -6,14 +6,14 @@ import { exsicuteRun } from "./exsicuteRun";
 const program = new Command();
 
 program
-	.name("my-Claw")
-	.description("✋ Hi i am Your helper your Claw yor personal Ai ")
+	.name("my-claw")
+	.description("✋ Hi I am your helper, your Claw, your personal AI")
 	.version("0.0.1");
 
 program
 	.command("run")
 	.description(
-		"I'm your local AI assistant that lives on your machine & telegram......",
+		"I'm your local AI assistant that lives on your machine & Telegram......",
 	)
 	.action(async () => {
 		await exsicuteRun();
