@@ -4,7 +4,9 @@
 	"type": "module",
 	"private": true,
 	"version": "0.0.1",
-	"My-Claw": "./index.ts",
+	"bin": {
+		"my-claw": "./index.ts"
+	},
 	"devDependencies": {
 		"@types/bun": "latest"
 	},
@@ -16,7 +18,13 @@
 	"homepage": "https://github.com/SayanSinghaChowdhury/age-tracker",
 	"dependencies": {
 		"@clack/prompts": "^1.7.0",
+		"@openrouter/ai-sdk-provider": "^3.0.0",
+		"ai": "^7.0.95",
+		"chalk": "^6.0.0",
 		"commander": "^15.0.0",
-		"figlet": "^1.11.4"
+		"figlet": "^1.11.4",
+		"install": "^0.13.0",
+		"loadenv": "^2.2.0",
+		"zod": "^4.6.4"
 	}
 }
